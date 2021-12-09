@@ -5,13 +5,13 @@ import playsound
 from gtts import gTTS
 import datetime
 import webbrowser as wb
-
+import re
 
 r = sr.Recognizer()
 
 
 def speak(text):
-    print('Thằng đệ: ' + text)
+    print("Thằng đệ: " + text)
 
     tts = gTTS(text=text, lang='vi')
     filename = 'voice.mp3'
@@ -24,13 +24,15 @@ def command():
     with sr.Microphone() as source:
         # Lay giong noi
         audio_data = r.record(source, duration=5)
-        print("Đang xử lý...", end= "\r")
-        time.sleep (2)
+
+        print("Đang nghe...", end= "\r")
+        time.sleep(1)
+
         # Chuyen doi giong noi sang text
         try:
             text = r.recognize_google(audio_data, language="vi")
         except:
-            text = ""
+            text = "...        "
         print("Tôi: " + text)
     return text        
 
@@ -55,6 +57,36 @@ def get_day():
     Day = datetime.datetime.now().strftime("%d/%m/%Y")
     speak("Hôm nay là ngày " + Day)
 
+
+def open_app(text):
+    if "chrome" in text:
+        speak("Mở google chrome")
+        os.system("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Google Chrome.exe") 
+        #mở ứng dụng dẽ ko tắt chương tr, tắt ứng dụng thì mới tát ct  
+
+    elif "zalo" in text:
+        speak("Đang mở ứng dụng zalo")
+        os.system("C:\\Users\\admin\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
+
+    else:
+        speak("Ứng dụng của bạn có vẻ chưa được cài đặt!")
+
+
+def open_web(text):
+    text = text.replace("trang", "")
+    print(text)
+    reg_ex = re.search('mở (.+)' , text)
+    if reg_ex:
+        domain = reg_ex.group(1)
+        url = "https://www." + domain
+        wb.open(url)
+        speak("Trang web bạn yêu cầu đã được mở")
+        if input("Hãy nhập a để tiếp tục: ") == "a": #sau khi mở web thì chương trình sẽ dừng lại đến khi bạn nhập "a"
+            pass
+        return True
+    else:
+        return False
+
 if __name__  =="__main__":
     welcome()      
 
@@ -65,38 +97,39 @@ if __name__  =="__main__":
                 bot_brain = "Tôi đang nghe đây"
                 speak(bot_brain)
 
-            elif "Xin chào" in text:
+            elif "xin chào" in text:
                 bot_brain = "Chào bạn, bạn khỏe không"
                 speak(bot_brain)
 
             elif"mấy giờ" in text:
                 get_time()
 
-            elif"ngày bao nhiêu" in text:
+            elif"ngày" in text:
                 get_day()
 
             elif "phim" in text:
                 meme =r"D:\A_BaiTap\AI\AI_Project\meme.mp4"
                 os.startfile(meme)
 
-            if "google" in text:
+            elif "google" in text:
                 speak("Bạn muốn tìm kiếm gì?")
                 search=command().lower()
                 url = f"https://google.com/search?q={search}"
                 wb.get().open(url)
-                speak(f'Here is your {search} on google')
+                speak(f'Đây là kết quả {search} trên google')
 
             elif "youtube" in text:
                 speak("Bạn muốn tìm kiếm gì?")
                 search=command().lower()
                 url = f"https://youtube.com/search?q={search}"
                 wb.get().open(url)
-                speak(f'Here is your {search} on youtube')                
+                speak(f'Đây là kết quả {search} trên youtube')                
                 
-
+            elif "mở" in text:
+                open_app(text)       
                 
 ########### Thêm chức năng ở trên đây 
-            elif "tạm biệt"or"bye" in text:
+            elif "tạm biệt" in text:
                 bot_brain = "Tạm biệt bạn!"
                 speak(bot_brain)
                 break
