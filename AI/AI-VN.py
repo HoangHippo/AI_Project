@@ -4,6 +4,7 @@ import time
 import playsound
 from gtts import gTTS
 import datetime
+import webbrowser as wb
 
 
 r = sr.Recognizer()
@@ -19,6 +20,20 @@ def speak(text):
     playsound.playsound(filename)
     os.remove(filename)
 
+def command():
+    with sr.Microphone() as source:
+        # Lay giong noi
+        audio_data = r.record(source, duration=5)
+        print("Đang xử lý...", end= "\r")
+        time.sleep (2)
+        # Chuyen doi giong noi sang text
+        try:
+            text = r.recognize_google(audio_data, language="vi")
+        except:
+            text = ""
+        print("Tôi: " + text)
+    return text        
+
 def welcome():
         #Chao hoi
         speak("Chào bạn, tôi có thể giúp gì cho bạn?") 
@@ -26,8 +41,10 @@ def welcome():
 def get_time():
     Time = datetime.datetime.now().strftime("%I:%M")
     Hour = datetime.datetime.now().hour
-    if Hour >= 6 and Hour<12:
+    if Hour >= 6 and Hour<10:
         Session = "sáng"
+    elif Hour>=11 and Hour<12:
+        Session = "trưa"
     elif Hour>=12 and Hour<18:
         Session = "chiều"
     elif Hour>=18 and Hour<24:
@@ -42,17 +59,7 @@ if __name__  =="__main__":
     welcome()      
 
     while True:
-        with sr.Microphone() as source:
-            # Lay giong noi
-            audio_data = r.record(source, duration=5)
-            print("Đang xử lý...", end= "\r")
-            time.sleep (2)
-            # Chuyen doi giong noi sang text
-            try:
-                text = r.recognize_google(audio_data, language="vi")
-            except:
-                text = ""
-            print("Tôi: " + text)
+            text=command().lower()
 
             if text == "":
                 bot_brain = "Tôi đang nghe đây"
@@ -68,7 +75,28 @@ if __name__  =="__main__":
             elif"ngày bao nhiêu" in text:
                 get_day()
 
-            elif "tạm biệt" in text:
+            elif "phim" in text:
+                meme =r"D:\A_BaiTap\AI\AI_Project\meme.mp4"
+                os.startfile(meme)
+
+            if "google" in text:
+                speak("Bạn muốn tìm kiếm gì?")
+                search=command().lower()
+                url = f"https://google.com/search?q={search}"
+                wb.get().open(url)
+                speak(f'Here is your {search} on google')
+
+            elif "youtube" in text:
+                speak("Bạn muốn tìm kiếm gì?")
+                search=command().lower()
+                url = f"https://youtube.com/search?q={search}"
+                wb.get().open(url)
+                speak(f'Here is your {search} on youtube')                
+                
+
+                
+########### Thêm chức năng ở trên đây 
+            elif "tạm biệt"or"bye" in text:
                 bot_brain = "Tạm biệt bạn!"
                 speak(bot_brain)
                 break
