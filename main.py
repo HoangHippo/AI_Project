@@ -142,8 +142,7 @@ if __name__ == "__main__":
             lang = command().lower()
             result = translate.lang_translate(a, lang)
             if result=="None": speak("Ngôn ngữ này không có!")
-            else:             speak(result)
-
+            else: speak(result)
 
 
 # Thêm chức năng ở trên đây
