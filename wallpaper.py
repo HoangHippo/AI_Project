@@ -5,9 +5,11 @@ import json
 import os
 import ctypes
 
+
 def change_wallpaper():
     api_key = 'K2yC2smNNshFB1cAMgsQu_O1LyDiWmZ9sVBg9LhpEEY'
-    url = 'https://api.unsplash.com/photos/random?client_id=' + api_key  # pic from unspalsh.com
+    url = 'https://api.unsplash.com/photos/random?client_id=' + \
+        api_key  # pic from unspalsh.com
     f = urllib2.urlopen(url)
     json_string = f.read()
     f.close()
@@ -20,10 +22,12 @@ def change_wallpaper():
     # image=os.path.join("D:/EPU/Images/a.png")
 
     #Ha#
-    urllib2.urlretrieve(photo, "D:/Pictures/ThayAnhNen/a.png")
-    image=os.path.join("D:/Pictures/ThayAnhNen/a.png")
+    # urllib2.urlretrieve(photo, "D:/Pictures/ThayAnhNen/a.png")
+    # image=os.path.join("D:/Pictures/ThayAnhNen/a.png")
 
     #Dat#
+    urllib2.urlretrieve(photo, "E:/AI_Project/b.png")
+    image = os.path.join("E:/AI_Project/b.png")
 
-    ctypes.windll.user32.SystemParametersInfoW(20,0,image,3)
+    ctypes.windll.user32.SystemParametersInfoW(20, 0, image, 3)
     speak('Hình nền máy tính vừa được thay đổi')

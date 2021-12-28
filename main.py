@@ -1,3 +1,13 @@
+import translate
+import wallpaper
+import sendmail
+import openapp
+import weather
+import search
+import openvideo
+import getdatetime
+from text_to_speak import speak
+from speak_to_text import command
 import os
 import ctypes
 import speech_recognition as sr
@@ -15,18 +25,6 @@ import urllib.request as urllib2
 from time import strftime
 from youtube_search import YoutubeSearch
 r = sr.Recognizer()
-
-
-from speak_to_text import command
-from text_to_speak import speak
-import getdatetime
-import openvideo
-import search
-import weather
-import openapp
-import sendmail
-import wallpaper
-import translate
 
 
 def welcome():
@@ -47,7 +45,8 @@ def help_me():
     8. Định nghĩa từ điển trên Wikipedia
     9. Đọc báo hôm nay
     10. Nghe nhạc trên Youtube
-    11. Thay đổi hình nền """)
+    11. Thay đổi hình nền
+    12. Dịch ngôn ngữ """)
 
 
 def hello(name):
@@ -59,12 +58,14 @@ def hello(name):
     else:
         speak("Chào buổi tối bạn {}. Bạn đã ăn tối chưa nhỉ.".format(name))
 
+
 if __name__ == "__main__":
     speak("Xin chào, bạn tên là gì nhỉ?")
     name = command()
     if name:
         speak("Chào bạn {}".format(name))
         welcome()
+        help_me()
 
     while True:
         text = command().lower()
@@ -76,9 +77,6 @@ if __name__ == "__main__":
         elif "chào" in text:
             hello(name)
 
-        elif "giúp" in text:
-            help_me()
-
         elif"mấy giờ" in text:
             result = getdatetime.get_time()
             speak("Bây giờ là " + result)
@@ -89,21 +87,21 @@ if __name__ == "__main__":
 
         elif"thứ mấy" in text:
             result = getdatetime.getDayOfWeek()
-            speak("Hôm nay là "+result)    
+            speak("Hôm nay là "+result)
 
         elif "phim" in text:
-            openvideo.open_video();
+            openvideo.open_video()
 
         elif "google" in text:
             speak("Bạn muốn tìm kiếm gì?")
             find = command().lower()
-            search.google(find);
+            search.google(find)
             speak(f'Đây là kết quả {find} trên google')
 
         elif "youtube" in text:
             speak("Bạn muốn tìm kiếm gì?")
             find = command().lower()
-            search.youtube(find);
+            search.youtube(find)
             speak(f'Đây là kết quả {find} trên youtube')
 
         elif 'tin tức' in text:
@@ -141,8 +139,10 @@ if __name__ == "__main__":
             speak("Bạn chọn ngôn ngữ gì?")
             lang = command().lower()
             result = translate.lang_translate(a, lang)
-            if result=="None": speak("Ngôn ngữ này không có!")
-            else: speak(result)
+            if result == "None":
+                speak("Ngôn ngữ này không có!")
+            else:
+                speak(result)
 
 
 # Thêm chức năng ở trên đây

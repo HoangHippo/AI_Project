@@ -2,6 +2,7 @@ from text_to_speak import speak
 
 import os
 
+
 def open_app(text):
     if "chrome" in text:
         speak("Mở google chrome")
@@ -21,10 +22,10 @@ def open_app(text):
     elif "zalo" in text:
         speak("Đang mở ứng dụng zalo")
         # Hà
-        os.system("C:\\Users\\admin\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
+        # os.system("C:\\Users\\admin\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
 
         # Đạt
-        # os.system("C:\\Users\\Admin\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
+        os.system("C:\\Users\\Admin\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
 
         # Hoàng
         # os.system("C:\\Users\\Admin\\AppData\\Local\\Programs\\Zalo\\Zalo.exe")
