@@ -11,7 +11,7 @@ import requests
 import json
 import wikipedia
 import smtplib
-import urllib3
+import urllib.request as urllib2
 from time import strftime
 from youtube_search import YoutubeSearch
 r = sr.Recognizer()
@@ -247,17 +247,16 @@ def play_song():
     speak("Bài hát bạn yêu cầu đã được mở.")
 
 def change_wallpaper():
-    api_key = 'fe8d8c65cf345889139d8e545f57819a'
-    url = 'https://api.unsplash.com/photos/random?client_id=' + \
-        api_key  # pic from unspalsh.com
-    f = urllib3.urlopen(url)
+    api_key = 'K2yC2smNNshFB1cAMgsQu_O1LyDiWmZ9sVBg9LhpEEY'
+    url = 'https://api.unsplash.com/photos/random?client_id=' + api_key  # pic from unspalsh.com
+    f = urllib2.urlopen(url)
     json_string = f.read()
     f.close()
     parsed_json = json.loads(json_string)
     photo = parsed_json['urls']['full']
     # Location where we download the image to.
-    urllib3.urlretrieve(photo, "D:\EPU\Images")
-    image=os.path.join("D:\EPU\Images")
+    urllib2.urlretrieve(photo, "D:/EPU/Images/a.png")
+    image=os.path.join("D:/EPU/Images/a.png")
     ctypes.windll.user32.SystemParametersInfoW(20,0,image,3)
     speak('Hình nền máy tính vừa được thay đổi')
 
@@ -328,7 +327,7 @@ if __name__ == "__main__":
         elif "nghe nhạc" in text:
             play_song()
 
-        elif "thay hình nền" in text:
+        elif "thay đổi hình nền" in text:
             change_wallpaper()
 
         elif "trang Web" in text:
