@@ -1,4 +1,5 @@
 import os
+import ctypes
 import speech_recognition as sr
 import time
 import playsound
@@ -9,7 +10,10 @@ import re
 import requests
 import json
 import wikipedia
+import smtplib
+import urllib3
 from time import strftime
+from youtube_search import YoutubeSearch
 r = sr.Recognizer()
 
 
@@ -47,7 +51,8 @@ def welcome():
 
 
 def help_me():
-    speak("""Bot có thể giúp bạn thực hiện các câu lệnh sau đây:
+    speak("""Tôi có thể giúp bạn thực hiện các câu lệnh sau đây:""")
+    print(""" 
     1. Chào hỏi
     2. Hiển thị ngày, giờ
     3. Mở website, application
@@ -56,7 +61,9 @@ def help_me():
     6. Dự báo thời tiết
     7. Mở video 
     8. Định nghĩa từ điển trên Wikipedia
-    9. Đọc báo hôm nay """)
+    9. Đọc báo hôm nay
+    10. Nghe nhạc trên Youtube
+    11. Thay đổi hình nền """)
 
 
 def hello(name):
@@ -211,6 +218,49 @@ def read_news():
         if number <= 3:
             wb.open(result['url'])
 
+def send_email(text):
+    speak('Bạn gửi email cho ai nhỉ')
+    recipient = command()
+    if 'hà' in recipient:
+        speak('Nội dung bạn muốn gửi là gì')
+        content = command()
+        mail = smtplib.SMTP('smtp.gmail.com', 587)
+        mail.ehlo()
+        mail.starttls()
+        mail.login('1fast0mail1@gmail.com', 'asdfghjkl123456@')
+        mail.sendmail('1fast0mail1@gmail.com',
+                      'hoanghippo17@gmail.com', content.encode('utf-8'))
+        mail.close()
+        speak('Email của bạn vùa được gửi. Bạn check lại email nhé hihi.')
+    else:
+        speak('Bot không hiểu bạn muốn gửi email cho ai. Bạn nói lại được không?')
+
+def play_song():
+    speak('Xin mời bạn chọn tên bài hát')
+    mysong = command()
+    while True:
+        result = YoutubeSearch(mysong, max_results=100).to_dict()
+        if result:
+            break
+    url = 'https://www.youtube.com' + result[0]['url_suffix']
+    wb.open(url)
+    speak("Bài hát bạn yêu cầu đã được mở.")
+
+def change_wallpaper():
+    api_key = 'fe8d8c65cf345889139d8e545f57819a'
+    url = 'https://api.unsplash.com/photos/random?client_id=' + \
+        api_key  # pic from unspalsh.com
+    f = urllib3.urlopen(url)
+    json_string = f.read()
+    f.close()
+    parsed_json = json.loads(json_string)
+    photo = parsed_json['urls']['full']
+    # Location where we download the image to.
+    urllib3.urlretrieve(photo, "D:\EPU\Images")
+    image=os.path.join("D:\EPU\Images")
+    ctypes.windll.user32.SystemParametersInfoW(20,0,image,3)
+    speak('Hình nền máy tính vừa được thay đổi')
+
 
 if __name__ == "__main__":
     speak("Xin chào, bạn tên là gì nhỉ?")
@@ -271,6 +321,15 @@ if __name__ == "__main__":
 
         elif "thời tiết" in text:
             current_weather()
+
+        elif "gửi mail" in text:
+            send_email(text)
+
+        elif "nghe nhạc" in text:
+            play_song()
+
+        elif "thay hình nền" in text:
+            change_wallpaper()
 
         elif "trang Web" in text:
             open_web(text)
